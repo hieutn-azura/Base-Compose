@@ -1,0 +1,40 @@
+package com.hdt.basecompose.ui.language
+
+data class LanguageItem(
+    val code: String,
+    val name: String,
+    val flag: String,
+)
+
+val languages = listOf(
+    LanguageItem("en", "English",            "🇺🇸"),
+    LanguageItem("vi", "Tiếng Việt",         "🇻🇳"),
+    LanguageItem("zh", "中文",                "🇨🇳"),
+    LanguageItem("ja", "日本語",              "🇯🇵"),
+    LanguageItem("ko", "한국어",              "🇰🇷"),
+    LanguageItem("es", "Español",            "🇪🇸"),
+    LanguageItem("fr", "Français",           "🇫🇷"),
+    LanguageItem("de", "Deutsch",            "🇩🇪"),
+    LanguageItem("pt", "Português",          "🇧🇷"),
+    LanguageItem("ru", "Русский",            "🇷🇺"),
+    LanguageItem("ar", "العربية",             "🇸🇦"),
+    LanguageItem("hi", "हिन्दी",              "🇮🇳"),
+    LanguageItem("it", "Italiano",           "🇮🇹"),
+    LanguageItem("tr", "Türkçe",             "🇹🇷"),
+    LanguageItem("th", "ภาษาไทย",            "🇹🇭"),
+    LanguageItem("id", "Bahasa Indonesia",   "🇮🇩"),
+    LanguageItem("nl", "Nederlands",         "🇳🇱"),
+    LanguageItem("pl", "Polski",             "🇵🇱"),
+    LanguageItem("sv", "Svenska",            "🇸🇪"),
+    LanguageItem("da", "Dansk",              "🇩🇰"),
+    LanguageItem("fi", "Suomi",              "🇫🇮"),
+    LanguageItem("no", "Norsk",              "🇳🇴"),
+    LanguageItem("cs", "Čeština",            "🇨🇿"),
+    LanguageItem("ro", "Română",             "🇷🇴"),
+    LanguageItem("hu", "Magyar",             "🇭🇺"),
+    LanguageItem("uk", "Українська",         "🇺🇦"),
+    LanguageItem("ms", "Bahasa Melayu",      "🇲🇾"),
+    LanguageItem("fa", "فارسی",               "🇮🇷"),
+    LanguageItem("he", "עברית",               "🇮🇱"),
+    LanguageItem("el", "Ελληνικά",           "🇬🇷"),
+)
