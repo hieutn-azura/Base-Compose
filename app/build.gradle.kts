@@ -3,15 +3,12 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)  // requires app/google-services.json — remove if not using Firebase
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 android {
     namespace = "com.hdt.basecompose"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.hdt.basecompose"
@@ -28,9 +25,15 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
+            manifestPlaceholders["ad_app_id"] = "ca-app-pub-3940256099942544~3347511713"
+            resValue("string", "ad_app_id", "ca-app-pub-3940256099942544~3347511713")
+            buildConfigField("boolean", "build_debug", "true")
         }
         create("product") {
             dimension = "env"
+            manifestPlaceholders["ad_app_id"] = "ca-app-pub-3940256099942544~3347511713"
+            resValue("string", "ad_app_id", "ca-app-pub-3940256099942544~3347511713")
+            buildConfigField("boolean", "build_debug", "false")
         }
     }
 
@@ -58,6 +61,7 @@ android {
         compose = true
         viewBinding = true
         buildConfig = true
+        resValues = true
     }
 
     bundle {
@@ -105,7 +109,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
 
-    // SDP / SSP — scalable dimensions
+    // SDP / SSP — scalable dimensions (used by native ad XML layouts)
     implementation(libs.intuit.sdp)
     implementation(libs.intuit.ssp)
 
@@ -128,6 +132,19 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.config)
     implementation(libs.firebase.messaging)
+
+    // AzAds + mediation
+    implementation(libs.azmoduleads)
+    compileOnly(libs.multidex)
+    implementation(libs.lottie.compose)
+    implementation(libs.shimmer)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.play.services.ads)
+    implementation(libs.mediation.facebook)
+    implementation(libs.mediation.mintegral)
+    // Pangle mediation excluded due to namespace conflict in pag-sdk 7.7.x — re-add when resolved
+    // implementation(libs.mediation.pangle)
 
     // Test
     testImplementation(libs.junit)

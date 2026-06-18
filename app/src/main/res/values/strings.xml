@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Base Compose</string>
+    <string name="fb_app_id" translatable="false">1111111111</string>
+    <string name="fb_client_token" translatable="false">2222222222222222222222</string>
+
+    <string name="skip">Skip</string>
+    <string name="language">Language</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get Started</string>
+    <string name="title_onboarding_1">Fast and Easy to Use</string>
+    <string name="title_onboarding_2">Safe and Secure</string>
+    <string name="title_onboarding_3">Powerful Features</string>
+    <string name="title_onboarding_4">Get Started Now!</string>
+    <string name="feature_that_fits_your_needs">Feature that fits your needs</string>
+    <string name="loading_language_data">Loading language data…</string>
+    <string name="applying_language">Applying language…</string>
+    <string name="changes_applied">Changes applied!</string>
+    <string name="done">Done</string>
+    <string name="this_action_may_contain_advertising">This action may contain advertising</string>
 </resources>

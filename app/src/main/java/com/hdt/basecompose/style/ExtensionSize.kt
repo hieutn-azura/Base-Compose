@@ -41,9 +41,9 @@ fun SpaceH(size: Dp) = Spacer(modifier = Modifier.height(size))
 @Composable
 fun SpaceW(size: Dp) = Spacer(modifier = Modifier.width(size))
 
-/** Fills remaining space in a Row / Column. */
+/** Fills remaining space in a Row / Column. Use inside a Row/Column with Spacer(Modifier.weight(1f)) directly. */
 @Composable
-fun SpaceF() = Spacer(modifier = Modifier.fillMaxWidth().weight(1f, fill = true))
+fun SpaceF() = Spacer(modifier = Modifier.fillMaxWidth())
 
 // Can't add weight extension here without a RowScope/ColumnScope receiver — use SpaceF inside
 // a Row/Column by calling Spacer(Modifier.weight(1f)) directly.

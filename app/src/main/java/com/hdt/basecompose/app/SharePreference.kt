@@ -12,9 +12,11 @@ import kotlin.reflect.KProperty
 
 class SharePreference(context: Context) {
 
-    private val prefs: SharedPreferences =
+    @PublishedApi
+    internal val prefs: SharedPreferences =
         context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    private val gson = Gson()
+    @PublishedApi
+    internal val gson = Gson()
 
     // ── Delegates ──────────────────────────────────────────────────────────────
 
@@ -76,7 +78,8 @@ class SharePreference(context: Context) {
 
     // ── Internal ───────────────────────────────────────────────────────────────
 
-    private fun <T> delegate(get: () -> T, set: (T) -> Unit) =
+    @PublishedApi
+    internal fun <T> delegate(get: () -> T, set: (T) -> Unit) =
         object : ReadWriteProperty<Any?, T> {
             override fun getValue(thisRef: Any?, property: KProperty<*>) = get()
             override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)

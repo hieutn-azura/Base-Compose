@@ -132,7 +132,7 @@ fun DotIndicator(
     current: Int,
     modifier: Modifier = Modifier,
     activeColor: Color = MaterialTheme.colorScheme.primary,
-    inactiveColor: Color = AppColors.Gray300,
+    inactiveColor: Color = Gray300,
     dotSize: Dp = 8.dp,
     spacing: Dp = 6.dp,
 ) {

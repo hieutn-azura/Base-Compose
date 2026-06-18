@@ -7,4 +7,34 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Additional colors from SampleAdsFirstFlow for native ad layouts -->
+    <color name="transparent">#00000000</color>
+    <color name="color_E5E6EB">#E5E6EB</color>
+    <color name="color_E8E8E8">#E8E8E8</color>
+    <color name="color_1D2129">#1D2129</color>
+    <color name="color_86909C">#86909C</color>
+    <color name="color_F2F2F7">#F2F2F7</color>
+    <color name="color_A9AEB8">#A9AEB8</color>
+    <color name="color_C6C6C8">#C6C6C8</color>
+    <color name="color_165DFF">#165DFF</color>
+    <color name="white_0">#00FFFFFF</color>
+    <color name="white_24">#3DFFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="background_secondary">#F2F2F7</color>
+    <color name="text_secondary">#993C3C43</color>
+    <color name="primary_20">#332F54EB</color>
+
+    <!-- Native ad colors (used by layout_native_*.xml) -->
+    <color name="color_text_headline_native_ad_high">#1D2129</color>
+    <color name="color_text_body_native_ad_high">#86909C</color>
+    <color name="color_text_cta_native_ad_high">#FFFFFF</color>
+    <color name="color_text_headline_native_ad_normal">#1D2129</color>
+    <color name="color_text_body_native_ad_normal">#86909C</color>
+    <color name="color_text_cta_native_ad_normal">#FFFFFF</color>
+    <color name="color_text_headline_native_ad_low">#1D2129</color>
+    <color name="color_text_body_native_ad_low">#86909C</color>
+    <color name="color_text_cta_native_ad_low">#165DFF</color>
+    <color name="color_bg_native_full">#FFFFFF</color>
+    <color name="primary">#2F54EB</color>
 </resources>
