@@ -36,6 +36,7 @@ import com.ads.control.billing.AppPurchase
 import com.hdt.basecompose.widget.NativeAdSlot
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.hdt.basecompose.R
+import com.hdt.basecompose.ads.`native`.NativeAdPreloadManager
 import com.hdt.basecompose.ads.`native`.NativeAdsWrapper
 import com.hdt.basecompose.ads.`native`.NativePlacement
 import com.hdt.basecompose.app.PreferenceData
@@ -216,6 +217,10 @@ class OnboardingActivity : BaseActivity() {
             val page = pages.getOrNull(pagerState.currentPage)
             if (page?.isRegular == true) nativeAdsWrapper.requestAdsOnboarding()
             else nativeAdsWrapper.cancelRequest()
+            if (pagerState.currentPage == pages.size - 1) {
+                NativeAdPreloadManager.preloadAd(this@OnboardingActivity, NativePlacement.FEATURE)
+                NativeAdPreloadManager.preloadAd(this@OnboardingActivity, NativePlacement.FEATURE_DUP)
+            }
         }
     }
 }

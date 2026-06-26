@@ -2,35 +2,36 @@ package com.hdt.basecompose.ui.feature
 
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.hdt.basecompose.R
 import com.hdt.basecompose.ads.`native`.NativeAdsWrapper
@@ -39,6 +40,10 @@ import com.hdt.basecompose.app.PreferenceData
 import com.hdt.basecompose.base.BaseActivity
 import com.hdt.basecompose.widget.NativeAdSlot
 import com.hdt.basecompose.remoteconfig.analytics.Analytics
+import com.hdt.basecompose.ui.theme.ColorLabelSecondary
+import com.hdt.basecompose.ui.theme.ColorMain
+import com.hdt.basecompose.ui.theme.ColorMainGradientEnd
+import com.hdt.basecompose.ui.theme.ColorTextDisabled
 import org.koin.android.ext.android.inject
 
 class Feature1Activity : BaseActivity() {
@@ -57,36 +62,63 @@ class Feature1Activity : BaseActivity() {
         )
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Content() {
-        val features = remember { sampleFeatures.map { it.copy(isSelected = false) } }
+        var items by remember { mutableStateOf(sampleFeatures.map { it.copy(isSelected = false) }) }
 
-        Scaffold(
-            topBar = {
-                TopAppBar(title = { Text(stringResource(R.string.feature_that_fits_your_needs)) })
-            }
-        ) { padding ->
-            Column(Modifier.fillMaxSize().padding(top = padding.calculateTopPadding())) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier.weight(1f),
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+        Column(Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
+            ) {
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = stringResource(R.string.feature_genre_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.feature_genre_subtitle),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = ColorLabelSecondary,
+                )
+                Spacer(Modifier.height(20.dp))
+                FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(features) { feature ->
-                        FeatureItem(
-                            feature = feature,
-                            isSelected = false,
-                            onClick = { navigateToFeature2() }
+                    items.forEachIndexed { index, feature ->
+                        GenreChip(
+                            label = stringResource(feature.nameRes),
+                            isSelected = feature.isSelected,
+                            onClick = {
+                                val updated = items.toMutableList().also {
+                                    it[index] = it[index].copy(isSelected = !it[index].isSelected)
+                                }
+                                navigateToFeature2(updated)
+                            }
                         )
                     }
                 }
-                NativeAdSlot(modifier = Modifier.fillMaxWidth()) { container, shimmer ->
-                    adContainerRef = container
-                    shimmerRef = shimmer
-                }
+            }
+            TextButton(
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.text_continue),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = ColorTextDisabled,
+                )
+            }
+            NativeAdSlot(modifier = Modifier.fillMaxWidth()) { container, shimmer ->
+                adContainerRef = container
+                shimmerRef = shimmer
             }
         }
 
@@ -96,8 +128,11 @@ class Feature1Activity : BaseActivity() {
         }
     }
 
-    private fun navigateToFeature2() {
-        startActivityAndFinish<Feature2Activity>()
+    private fun navigateToFeature2(items: List<FeatureModel>) {
+        val selected = BooleanArray(items.size) { items[it].isSelected }
+        startActivityAndFinish<Feature2Activity> {
+            putExtra(Feature2Activity.EXTRA_SELECTED, selected)
+        }
         overridePendingTransition(0, 0)
     }
 
@@ -109,53 +144,31 @@ class Feature1Activity : BaseActivity() {
     }
 }
 
+private val selectedChipBrush = Brush.verticalGradient(
+    colors = listOf(ColorMain, ColorMainGradientEnd)
+)
+
 @Composable
-fun FeatureItem(
-    feature: FeatureModel,
+fun GenreChip(
+    label: String,
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val primary = MaterialTheme.colorScheme.primary
-    val shape = RoundedCornerShape(12.dp)
-
-    Card(
-        onClick = onClick,
+    Box(
         modifier = Modifier
-            .aspectRatio(1f)
+            .clip(RoundedCornerShape(50.dp))
+            .background(if (isSelected) selectedChipBrush else SolidColor(Color.Transparent))
             .then(
-                if (isSelected) Modifier.border(1.5.dp, primary, shape)
-                else Modifier.border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), shape)
-            ),
-        shape = shape,
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
-                primary.copy(alpha = 0.08f)
-            else
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        ),
-        elevation = CardDefaults.cardElevation(0.dp),
+                if (!isSelected) Modifier.border(1.dp, Color.White.copy(alpha = 0.35f), RoundedCornerShape(50.dp))
+                else Modifier
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            AsyncImage(
-                model = feature.iconId,
-                contentDescription = feature.name,
-                modifier = Modifier.size(32.dp),
-            )
-            Text(
-                text = feature.name,
-                style = MaterialTheme.typography.labelSmall,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                modifier = Modifier.padding(top = 6.dp),
-                color = if (isSelected) primary
-                        else MaterialTheme.colorScheme.onSurface,
-            )
-        }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.White,
+        )
     }
 }

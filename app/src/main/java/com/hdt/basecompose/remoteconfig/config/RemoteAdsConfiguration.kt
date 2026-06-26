@@ -29,6 +29,7 @@ class RemoteAdsConfiguration private constructor() : BaseRemoteConfiguration() {
         remoteConfig.saveToLocal(NativeOnboardingFull1Config)
         remoteConfig.saveToLocal(NativeOnboardingFull2Config)
         remoteConfig.saveToLocal(NativeFeatureConfig)
+        remoteConfig.saveToLocal(NativeFeatureDupConfig)
         remoteConfig.saveToLocal(NativeHomeConfig)
         remoteConfig.saveToLocal(InterAllConfig)
         remoteConfig.saveToLocal(BannerAllConfig)
@@ -49,6 +50,7 @@ class RemoteAdsConfiguration private constructor() : BaseRemoteConfiguration() {
     private data object NativeOnboardingFull1Config : RemoteKeys.StringKey("N107_config_1", Gson().toJson(AdNativeConfig.defaultOnboardingFull1()))
     private data object NativeOnboardingFull2Config : RemoteKeys.StringKey("N108_config_1", Gson().toJson(AdNativeConfig.defaultOnboardingFull2()))
     private data object NativeFeatureConfig : RemoteKeys.StringKey("N109_config_1", Gson().toJson(AdNativeConfig.defaultFeature()))
+    private data object NativeFeatureDupConfig : RemoteKeys.StringKey("N109_config_2", Gson().toJson(AdNativeConfig.defaultFeatureDup()))
     private data object NativeHomeConfig : RemoteKeys.StringKey("N110_config_1", Gson().toJson(AdNativeConfig.defaultHome()))
     private data object InterAllConfig : RemoteKeys.StringKey("I102_config_1", Gson().toJson(AdInterConfig.defaultAll()))
     private data object BannerAllConfig : RemoteKeys.StringKey("B101_config_1", Gson().toJson(AdBannerConfig.defaultAll()))
@@ -95,6 +97,9 @@ class RemoteAdsConfiguration private constructor() : BaseRemoteConfiguration() {
 
     val adNativeFeatureConfig: AdNativeConfig
         get() = gson.fromJsonConfig(NativeFeatureConfig, AdNativeConfig.defaultFeature()) { it.copy(enable = it.enable && isAdsEnable) }
+
+    val adNativeFeatureDupConfig: AdNativeConfig
+        get() = gson.fromJsonConfig(NativeFeatureDupConfig, AdNativeConfig.defaultFeatureDup()) { it.copy(enable = it.enable && isAdsEnable) }
 
     val adNativeHomeConfig: AdNativeConfig
         get() = gson.fromJsonConfig(NativeHomeConfig, AdNativeConfig.defaultHome()) { it.copy(enable = it.enable && isAdsEnable) }

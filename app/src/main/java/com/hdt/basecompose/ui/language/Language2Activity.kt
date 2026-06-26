@@ -2,11 +2,10 @@ package com.hdt.basecompose.ui.language
 
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -24,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.hdt.basecompose.R
 import com.hdt.basecompose.ads.`native`.NativeAdsWrapper
@@ -40,6 +38,7 @@ class Language2Activity : BaseActivity() {
 
     companion object {
         const val EXTRA_SELECTED_CODE = "selected_code"
+        const val EXTRA_SCROLL_INDEX = "scroll_index"
         const val EXTRA_SCROLL_OFFSET = "scroll_offset"
     }
 
@@ -63,9 +62,15 @@ class Language2Activity : BaseActivity() {
     @Composable
     override fun Content() {
         val preSelectedCode = remember { intent.getStringExtra(EXTRA_SELECTED_CODE) ?: "" }
+        val preScrollIndex = remember { intent.getIntExtra(EXTRA_SCROLL_INDEX, 0) }
+        val preScrollOffset = remember { intent.getIntExtra(EXTRA_SCROLL_OFFSET, 0) }
         val languages = remember { buildLanguageList() }
         var selectedCode by remember { mutableStateOf(preSelectedCode) }
         val selectedItem = remember(selectedCode) { languages.find { it.code == selectedCode } }
+        val listState = rememberLazyListState(
+            initialFirstVisibleItemIndex = preScrollIndex,
+            initialFirstVisibleItemScrollOffset = preScrollOffset,
+        )
 
         Scaffold(
             topBar = {
@@ -89,6 +94,7 @@ class Language2Activity : BaseActivity() {
                     languages = languages,
                     selectedCode = selectedCode,
                     enabled = true,
+                    listState = listState,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()

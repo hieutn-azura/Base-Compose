@@ -255,6 +255,12 @@ enum class NativePlacement(
         preloadLayoutId = { LayoutSelector.getLayout(remoteAds.adNativeFeatureConfig.layout) },
         layoutMeta = { LayoutSelector.getMetaLayout(type = remoteAds.adNativeFeatureConfig.layout) },
     ),
+    FEATURE_DUP(
+        listId = { remoteAds.adNativeFeatureDupConfig.listAds.filter { it.enableAd }.map { it.adUnit } },
+        canShowAds = { remoteAds.adNativeFeatureDupConfig.enable },
+        preloadLayoutId = { LayoutSelector.getLayout(remoteAds.adNativeFeatureDupConfig.layout) },
+        layoutMeta = { LayoutSelector.getMetaLayout(type = remoteAds.adNativeFeatureDupConfig.layout) },
+    ),
     HOME(
         listId = { remoteAds.adNativeHomeConfig.listAds.filter { it.enableAd }.map { it.adUnit } },
         canShowAds = { remoteAds.adNativeHomeConfig.enable },

@@ -52,6 +52,11 @@ data class AdNativeConfig(
             layout = LayoutNativeType.NativeMediumMediaLeftCtaBottom.type,
             listAds = listOf(AdConfig(enableAd = true, adUnit = "ca-app-pub-3940256099942544/2247696110"))
         )
+        fun defaultFeatureDup() = AdNativeConfig(
+            enable = true,
+            layout = LayoutNativeType.NativeMediumMediaLeftCtaBottom.type,
+            listAds = listOf(AdConfig(enableAd = true, adUnit = "ca-app-pub-3940256099942544/2247696110"))
+        )
         fun defaultHome() = AdNativeConfig(
             enable = true,
             layout = LayoutNativeType.NativeMediumMediaLeftCtaBottom.type,

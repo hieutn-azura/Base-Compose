@@ -1,21 +1,22 @@
 package com.hdt.basecompose.ui.feature
 
+import androidx.annotation.StringRes
 import com.hdt.basecompose.R
 
 data class FeatureModel(
-    val iconId: Int,
-    val name: String,
+    @param:StringRes val nameRes: Int,
     var isSelected: Boolean = false,
 )
 
 val sampleFeatures = listOf(
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 1"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 2"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 3"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 4"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 5"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 6"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 7"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 8"),
-    FeatureModel(iconId = R.drawable.ic_launcher_foreground, name = "Feature 9"),
+    FeatureModel(R.string.genre_romance),
+    FeatureModel(R.string.genre_revenge),
+    FeatureModel(R.string.genre_ceo),
+    FeatureModel(R.string.genre_thriller),
+    FeatureModel(R.string.genre_betrayal),
+    FeatureModel(R.string.genre_secret_baby),
+    FeatureModel(R.string.genre_mafia),
+    FeatureModel(R.string.genre_fantasy),
+    FeatureModel(R.string.genre_marriage_contract),
+    FeatureModel(R.string.genre_contemporary_romance),
 )

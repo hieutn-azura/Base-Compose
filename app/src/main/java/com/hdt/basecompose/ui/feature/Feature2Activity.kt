@@ -2,25 +2,18 @@ package com.hdt.basecompose.ui.feature
 
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -39,9 +33,15 @@ import com.hdt.basecompose.app.PreferenceData
 import com.hdt.basecompose.base.BaseActivity
 import com.hdt.basecompose.widget.NativeAdSlot
 import com.hdt.basecompose.remoteconfig.analytics.Analytics
+import com.hdt.basecompose.ui.theme.ColorLabelSecondary
+import com.hdt.basecompose.ui.theme.ColorTextDisabled
 import org.koin.android.ext.android.inject
 
 class Feature2Activity : BaseActivity() {
+
+    companion object {
+        const val EXTRA_SELECTED = "extra_selected"
+    }
 
     private val prefs: PreferenceData by inject()
     private var adContainerRef: FrameLayout? = null
@@ -50,54 +50,77 @@ class Feature2Activity : BaseActivity() {
     private val nativeAdsWrapper: NativeAdsWrapper by lazy {
         NativeAdsWrapper(
             activity = this,
-            config = NativePlacement.FEATURE,
+            config = NativePlacement.FEATURE_DUP,
             lifecycleOwner = this,
             adContainer = { adContainerRef!! },
             shimmerView = { shimmerRef!! },
         )
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Content() {
-        var features by remember { mutableStateOf(sampleFeatures.map { it.copy() }) }
-
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.feature_that_fits_your_needs)) },
-                    actions = {
-                        IconButton(onClick = { finishFlow() }) {
-                            Icon(Icons.Default.Check, contentDescription = stringResource(R.string.done))
-                        }
-                    }
-                )
+        val selected = intent.getBooleanArrayExtra(EXTRA_SELECTED)
+        val initialFeatures = remember {
+            sampleFeatures.mapIndexed { index, feature ->
+                feature.copy(isSelected = selected?.getOrNull(index) ?: false)
             }
-        ) { padding ->
-            Column(Modifier.fillMaxSize().padding(top = padding.calculateTopPadding())) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier.weight(1f),
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+        }
+        var items by remember { mutableStateOf(initialFeatures) }
+        val selectedCount = items.count { it.isSelected }
+        val primary = MaterialTheme.colorScheme.primary
+
+        Column(Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
+            ) {
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = stringResource(R.string.feature_genre_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.feature_genre_subtitle),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = ColorLabelSecondary,
+                )
+                Spacer(Modifier.height(20.dp))
+                FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    itemsIndexed(features) { index, feature ->
-                        FeatureItem(
-                            feature = feature,
+                    items.forEachIndexed { index, feature ->
+                        GenreChip(
+                            label = stringResource(feature.nameRes),
                             isSelected = feature.isSelected,
                             onClick = {
-                                features = features.toMutableList().also {
+                                items = items.toMutableList().also {
                                     it[index] = it[index].copy(isSelected = !it[index].isSelected)
                                 }
                             }
                         )
                     }
                 }
-                NativeAdSlot(modifier = Modifier.fillMaxWidth()) { container, shimmer ->
-                    adContainerRef = container
-                    shimmerRef = shimmer
-                }
+            }
+            TextButton(
+                onClick = { if (selectedCount > 2) finishFlow() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.text_continue),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (selectedCount > 2) primary else ColorTextDisabled,
+                )
+            }
+            NativeAdSlot(modifier = Modifier.fillMaxWidth()) { container, shimmer ->
+                adContainerRef = container
+                shimmerRef = shimmer
             }
         }
 

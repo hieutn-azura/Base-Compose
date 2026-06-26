@@ -3,11 +3,10 @@ package com.hdt.basecompose.ui.language
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import com.facebook.shimmer.ShimmerFrameLayout
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -15,13 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.hdt.basecompose.widget.NativeAdSlot
 import com.hdt.basecompose.R
 import com.hdt.basecompose.ads.`native`.NativeAdPreloadManager
@@ -63,11 +58,7 @@ class Language1Activity : BaseActivity() {
                 TopAppBar(title = { Text(stringResource(R.string.language)) })
             }
         ) { padding ->
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .run { this }
-            ) {
+            Column(Modifier.fillMaxSize()) {
                 LanguageListContent(
                     languages = languages,
                     selectedCode = "",
@@ -78,7 +69,11 @@ class Language1Activity : BaseActivity() {
                         .fillMaxWidth()
                         .padding(top = padding.calculateTopPadding()),
                     onItemClick = { item ->
-                        navigateToLfo2(item, listState.firstVisibleItemScrollOffset)
+                        navigateToLfo2(
+                            item,
+                            listState.firstVisibleItemIndex,
+                            listState.firstVisibleItemScrollOffset,
+                        )
                     },
                 )
 
@@ -98,6 +93,8 @@ class Language1Activity : BaseActivity() {
                     remoteAds.onboardingScreenConfig.count()
                 )
             }
+            NativeAdPreloadManager.preloadAd(this@Language1Activity, NativePlacement.ONBOARDING_FULL_1)
+            NativeAdPreloadManager.preloadAd(this@Language1Activity, NativePlacement.ONBOARDING_FULL_2)
             with(nativeAdsWrapper) {
                 setupNativeAd("native_language_1")
                 requestAds()
@@ -118,9 +115,10 @@ class Language1Activity : BaseActivity() {
         }
     }
 
-    private fun navigateToLfo2(item: LanguageItem, scrollOffset: Int) {
+    private fun navigateToLfo2(item: LanguageItem, firstIndex: Int, scrollOffset: Int) {
         startActivityAndFinish<Language2Activity> {
             putExtra(Language2Activity.EXTRA_SELECTED_CODE, item.code)
+            putExtra(Language2Activity.EXTRA_SCROLL_INDEX, firstIndex)
             putExtra(Language2Activity.EXTRA_SCROLL_OFFSET, scrollOffset)
         }
         overridePendingTransition(0, 0)
